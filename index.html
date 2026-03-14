@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --naranja:#E8490F;--dorado:#F5A623;--crema:#FFF8F0;--cafe:#3D1F00;
+    --verde:#1A6B3C;--rosa:#E8406A;--azul:#1A3A6B;--gris:#F5F5F5;
+    --texto:#1A1A1A;--blanco:#ffffff;
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--crema);color:var(--texto);overflow-x:hidden}
+  header{background:linear-gradient(135deg,var(--cafe) 0%,#6B3A1F 50%,var(--cafe) 100%);padding:0 2rem;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+  .header-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+  .logo{display:flex;align-items:center;gap:12px}
+  .logo-icon{width:48px;height:48px;background:var(--naranja);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px}
+  .logo-text{color:var(--blanco)}
+  .logo-text h1{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;line-height:1;letter-spacing:-0.5px}
+  .logo-text span{font-size:0.7rem;color:var(--dorado);letter-spacing:2px;text-transform:uppercase;font-weight:500}
+  .cart-btn{background:var(--naranja);color:var(--blanco);border:none;padding:10px 20px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s;box-shadow:0 4px 15px rgba(232,73,15,0.4)}
+  .cart-btn:hover{background:#c73c09;transform:translateY(-2px)}
+  .cart-count{background:var(--dorado);color:var(--cafe);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700}
+  .cat-nav{display:flex;gap:0.5rem;padding:0.8rem 0;overflow-x:auto;scrollbar-width:none}
+  .cat-nav::-webkit-scrollbar{display:none}
+  .cat-btn{background:rgba(255,255,255,0.1);color:var(--blanco);border:1px solid rgba(255,255,255,0.2);padding:6px 18px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;white-space:nowrap;transition:all 0.2s}
+  .cat-btn:hover,.cat-btn.active{background:var(--dorado);color:var(--cafe);border-color:var(--dorado)}
+  .hero{background:linear-gradient(135deg,#1A1A1A 0%,#2D1600 50%,var(--cafe) 100%);padding:4rem 2rem;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 60% 40%,rgba(232,73,15,0.15) 0%,transparent 60%),radial-gradient(circle at 20% 80%,rgba(245,166,35,0.1) 0%,transparent 50%);animation:pulse 4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+  .hero-badge{display:inline-block;background:var(--naranja);color:var(--blanco);padding:4px 16px;border-radius:50px;font-size:0.75rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:1rem;position:relative}
+  .hero h2{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--blanco);line-height:1.1;margin-bottom:0.5rem;position:relative}
+  .hero h2 span{color:var(--dorado)}
+  .hero p{color:rgba(255,255,255,0.7);font-size:1rem;position:relative;max-width:400px;margin:0 auto 1.5rem}
+  .hero-cta{background:linear-gradient(135deg,var(--naranja),var(--dorado));color:var(--blanco);border:none;padding:14px 36px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;position:relative;transition:all 0.3s;box-shadow:0 8px 25px rgba(232,73,15,0.5)}
+  .hero-cta:hover{transform:translateY(-3px)}
+  main{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+  .section{margin-bottom:3.5rem}
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+  .section-title{display:flex;align-items:center;gap:12px}
+  .section-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .section-title h3{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--cafe)}
+  .divider{height:3px;background:linear-gradient(90deg,var(--naranja),var(--dorado),transparent);border-radius:2px;margin-bottom:1.5rem}
+  .productos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.2rem}
+  .prod-card{background:var(--blanco);border-radius:18px;overflow:hidden;box-shadow:0 2px 15px rgba(0,0,0,0.07);transition:all 0.3s;cursor:pointer;border:1.5px solid rgba(0,0,0,0.04);position:relative}
+  .prod-card:hover{transform:translateY(-6px);box-shadow:0 12px 35px rgba(0,0,0,0.12)}
+  .prod-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;overflow:hidden}
+  .prod-tag{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:20px;font-size:0.68rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+  .tag-nuevo{background:#E8F5E9;color:#2E7D32}
+  .tag-oferta{background:#FFF3E0;color:#E65100}
+  .tag-top{background:#FCE4EC;color:#C62828}
+  .prod-info{padding:1rem}
+  .prod-nombre{font-weight:600;font-size:0.95rem;margin-bottom:4px;color:var(--texto)}
+  .prod-desc{font-size:0.8rem;color:#666;margin-bottom:0.8rem;line-height:1.4}
+  .prod-precio-row{display:flex;align-items:center;justify-content:space-between}
+  .prod-precio{font-size:1.2rem;font-weight:700;color:var(--cafe)}
+  .prod-precio-antes{font-size:0.8rem;color:#999;text-decoration:line-through;margin-left:6px}
+  .add-btn{background:var(--naranja);color:var(--blanco);border:none;width:36px;height:36px;border-radius:50%;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+  .add-btn:hover{background:#c73c09;transform:scale(1.1)}
+  .add-btn.added{background:var(--verde)}
+  .cart-overlay{position:fixed;top:0;right:-420px;width:420px;max-width:100vw;height:100vh;background:var(--blanco);z-index:1000;transition:right 0.35s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,0.15)}
+  .cart-overlay.open{right:0}
+  .cart-bg{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:999;display:none;backdrop-filter:blur(2px)}
+  .cart-bg.open{display:block}
+  .cart-header{background:linear-gradient(135deg,var(--cafe),#6B3A1F);padding:1.5rem;display:flex;align-items:center;justify-content:space-between}
+  .cart-header h3{color:var(--blanco);font-family:'Playfair Display',serif;font-size:1.4rem}
+  .close-btn{background:rgba(255,255,255,0.15);color:var(--blanco);border:none;width:36px;height:36px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .close-btn:hover{background:rgba(255,255,255,0.25)}
+  .cart-items{flex:1;overflow-y:auto;padding:1rem}
+  .cart-empty{text-align:center;padding:3rem 1rem;color:#999}
+  .cart-empty-icon{font-size:4rem;margin-bottom:1rem}
+  .cart-item{display:flex;align-items:center;gap:12px;padding:0.8rem;margin-bottom:0.8rem;background:var(--gris);border-radius:12px}
+  .cart-item-emoji{font-size:2rem;width:48px;height:48px;background:var(--blanco);border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .cart-item-info{flex:1}
+  .cart-item-name{font-weight:600;font-size:0.9rem;margin-bottom:2px}
+  .cart-item-precio{color:var(--naranja);font-weight:700;font-size:0.9rem}
+  .cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .qty-btn{background:var(--blanco);border:1px solid #ddd;width:26px;height:26px;border-radius:50%;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .qty-btn:hover{background:var(--naranja);color:var(--blanco);border-color:var(--naranja)}
+  .qty-num{font-weight:600;font-size:0.9rem;min-width:20px;text-align:center}
+  .del-btn{background:none;border:none;color:#ccc;font-size:1.2rem;cursor:pointer;margin-left:auto}
+  .del-btn:hover{color:var(--rosa)}
+  .cart-footer{padding:1.2rem;border-top:1px solid #eee}
+  .cart-total{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;margin-bottom:1rem}
+  .whatsapp-btn{width:100%;background:linear-gradient(135deg,#25D366,#128C7E);color:var(--blanco);border:none;padding:16px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.2s;box-shadow:0 6px 20px rgba(37,211,102,0.35)}
+  .whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(37,211,102,0.45)}
+  .whatsapp-icon{width:26px;height:26px}
+  .mapa-btn{width:100%;background:var(--blanco);color:var(--cafe);border:2px solid var(--cafe);padding:12px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:0.6rem;transition:all 0.2s}
+  .mapa-btn:hover{background:var(--cafe);color:var(--blanco)}
+  .ubicacion-banner{background:linear-gradient(135deg,var(--cafe),#6B3A1F);padding:2rem;border-radius:20px;color:var(--blanco);display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:3rem}
+  .ubi-icon{font-size:3.5rem}
+  .ubi-info h4{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:4px}
+  .ubi-info p{opacity:0.85;font-size:0.9rem;line-height:1.5}
+  .ubi-badge{background:rgba(255,255,255,0.15);padding:4px 14px;border-radius:20px;font-size:0.78rem;margin-top:8px;display:inline-block}
+  .ubi-map-btn{margin-left:auto;background:var(--dorado);color:var(--cafe);border:none;padding:12px 22px;border-radius:14px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;white-space:nowrap;transition:all 0.2s}
+  .ubi-map-btn:hover{background:#e09800;transform:translateY(-2px)}
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--cafe);color:var(--blanco);padding:12px 24px;border-radius:50px;font-weight:600;font-size:0.9rem;z-index:2000;transition:transform 0.3s;box-shadow:0 8px 25px rgba(0,0,0,0.25);white-space:nowrap;pointer-events:none}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .s-pantalones .section-icon{background:#E3F2FD;color:#1565C0}
+  .s-playeras .section-icon{background:#FCE4EC;color:#C62828}
+  .s-sombreros .section-icon{background:#FFF3E0;color:#E65100}
+  .s-zapatos .section-icon{background:#F3E5F5;color:#6A1B9A}
+  .s-vestidos .section-icon{background:#E8F5E9;color:#2E7D32}
+  .s-accesorios .section-icon{background:#FFF9C4;color:#F57F17}
+  .s-pantalones .prod-img{background:linear-gradient(135deg,#E3F2FD,#BBDEFB)}
+  .s-playeras .prod-img{background:linear-gradient(135deg,#FCE4EC,#F8BBD9)}
+  .s-sombreros .prod-img{background:linear-gradient(135deg,#FFF3E0,#FFE0B2)}
+  .s-zapatos .prod-img{background:linear-gradient(135deg,#F3E5F5,#E1BEE7)}
+  .s-vestidos .prod-img{background:linear-gradient(135deg,#E8F5E9,#C8E6C9)}
+  .s-accesorios .prod-img{background:linear-gradient(135deg,#FFF9C4,#FFF59D)}
+  @media(max-width:600px){
+    .hero h2{font-size:2.2rem}
+    .productos-grid{grid-template-columns:repeat(2,1fr);gap:0.8rem}
+    .prod-img{height:150px;font-size:3.5rem}
+    .ubicacion-banner{flex-direction:column;text-align:center}
+    .ubi-map-btn{margin:0}
+    .cart-overlay{width:100vw}
+    header{padding:0 1rem}
+    main{padding:1rem}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">👗</div>
+      <div class="logo-text">
+        <h1>ModaMix</h1>
+        <span>Estilo para todos</span>
+      </div>
+    </div>
+    <button class="cart-btn" onclick="abrirCarrito()">
+      🛒 Carrito
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+  <nav class="cat-nav">
+    <button class="cat-btn active" onclick="irA('#pantalones',this)">👖 Pantalones</button>
+    <button class="cat-btn" onclick="irA('#playeras',this)">👕 Playeras</button>
+    <button class="cat-btn" onclick="irA('#sombreros',this)">🎩 Sombreros</button>
+    <button class="cat-btn" onclick="irA('#zapatos',this)">👟 Zapatos</button>
+    <button class="cat-btn" onclick="irA('#vestidos',this)">👗 Vestidos</button>
+    <button class="cat-btn" onclick="irA('#accesorios',this)">💍 Accesorios</button>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="hero-badge">✨ Temporada Nueva</div>
+  <h2>Moda que te<br><span>hace brillar</span></h2>
+  <p>Prendas exclusivas · Precios increíbles · Chignahuapan</p>
+  <button class="hero-cta" onclick="document.getElementById('catalogo').scrollIntoView({behavior:'smooth'})">Ver Catálogo ↓</button>
+</div>
+
+<main id="catalogo">
+
+  <!-- UBICACION -->
+  <div class="ubicacion-banner">
+    <div class="ubi-icon">📍</div>
+    <div class="ubi-info">
+      <h4>Encuéntranos aquí</h4>
+      <p>Av. Roseville No. 10 · Chignahuapan, Pue. 73300</p>
+      <p style="opacity:0.75;font-size:0.82rem;margin-top:2px">A 1.3 km del centro de Chignahuapan</p>
+      <span class="ubi-badge">📞 WhatsApp: 453665</span>
+    </div>
+    <button class="ubi-map-btn" onclick="abrirMapa()">📍 Ver en Mapa</button>
+  </div>
+
+  <div class="section s-pantalones" id="pantalones">
+    <div class="section-header"><div class="section-title"><div class="section-icon">👖</div><h3>Pantalones</h3></div></div>
+    <div class="divider"></div>
+    <div class="productos-grid" id="grid-pantalones"></div>
+  </div>
+
+  <div class="section s-playeras" id="playeras">
+    <div class="section-header"><div class="section-title"><div class="section-icon">👕</div><h3>Playeras</h3></div></div>
+    <div class="divider"></div>
+    <div class="productos-grid" id="grid-playeras"></div>
+  </div>
+
+  <div class="section s-sombreros" id="sombreros">
+    <div class="section-header"><div class="section-title"><div class="section-icon">🎩</div><h3>Sombreros</h3></div></div>
+    <div class="divider"></div>
+    <div class="productos-grid" id="grid-sombreros"></div>
+  </div>
+
+  <div class="section s-zapatos" id="zapatos">
+    <div class="section-header"><div class="section-title"><div class="section-icon">👟</div><h3>Zapatos</h3></div></div>
+    <div class="divider"></div>
+    <div class="productos-grid" id="grid-zapatos"></div>
+  </div>
+
+  <div class="section s-vestidos" id="vestidos">
+    <div class="section-header"><div class="section-title"><div class="section-icon">👗</div><h3>Vestidos</h3></div></div>
+    <div class="divider"></div>
+    <div class="productos-grid" id="grid-vestidos"></div>
+  </div>
+
+  <div class="section s-accesorios" id="accesorios">
+    <div class="section-header"><div class="section-title"><div class="section-icon">💍</div><h3>Accesorios</h3></div></div>
+    <div class="divider"></div>
+    <div class="productos-grid" id="grid-accesorios"></div>
+  </div>
+
+</main>
+
+<div class="cart-bg" id="cartBg" onclick="cerrarCarrito()"></div>
+<div class="cart-overlay" id="cartPanel">
+  <div class="cart-header">
+    <h3>🛒 Tu pedido</h3>
+    <button class="close-btn" onclick="cerrarCarrito()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">🛍️</div>
+      <p style="font-weight:600;margin-bottom:6px">¡Tu carrito está vacío!</p>
+      <p style="font-size:0.85rem;color:#aaa">Agrega productos para hacer tu pedido por WhatsApp</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total:</span><span id="cartTotal">$0</span></div>
+    <button class="whatsapp-btn" onclick="enviarWhatsApp()">
+      <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Pedir por WhatsApp
+    </button>
+    <button class="mapa-btn" onclick="abrirMapa()">📍 Ver ubicación en el mapa</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const WAPP='453665';
+const MAPS_URL='https://maps.google.com/?q=Avenida+Roseville+No.+10+Chignahuapan+Puebla+73300+Mexico';
+
+const catalogo={
+  pantalones:[
+    {id:'p1',emoji:'👖',nombre:'Pantalón Clásico Negro',desc:'Corte recto, tela premium',precio:320,antes:420,tag:'top'},
+    {id:'p2',emoji:'🩳',nombre:'Jean Slim Azul',desc:'Ajustado y cómodo, varios talles',precio:280,antes:null,tag:'nuevo'},
+    {id:'p3',emoji:'👖',nombre:'Jogger Deportivo',desc:'Perfecto para el día a día',precio:220,antes:280,tag:'oferta'},
+    {id:'p4',emoji:'👖',nombre:'Pantalón Beige Casual',desc:'Ligero, ideal para calor',precio:260,antes:null,tag:'nuevo'},
+  ],
+  playeras:[
+    {id:'t1',emoji:'👕',nombre:'Playera Básica Blanca',desc:'100% algodón, talla única',precio:120,antes:null,tag:'top'},
+    {id:'t2',emoji:'🎽',nombre:'Polo Estampada',desc:'Colores vibrantes, bordada',precio:180,antes:220,tag:'oferta'},
+    {id:'t3',emoji:'👕',nombre:'Playera Oversize',desc:'Tendencia, muy cómoda',precio:160,antes:null,tag:'nuevo'},
+    {id:'t4',emoji:'🧥',nombre:'Playera Manga Larga',desc:'Para días frescos',precio:200,antes:240,tag:'oferta'},
+  ],
+  sombreros:[
+    {id:'s1',emoji:'🎩',nombre:'Sombrero de Palma',desc:'Artesanal, protege del sol',precio:180,antes:null,tag:'top'},
+    {id:'s2',emoji:'🧢',nombre:'Gorra Trucker',desc:'Ajustable, varios colores',precio:120,antes:150,tag:'oferta'},
+    {id:'s3',emoji:'👒',nombre:'Pamela de Verano',desc:'Elegante y fresca',precio:220,antes:null,tag:'nuevo'},
+    {id:'s4',emoji:'🎩',nombre:'Boina Francesa',desc:'Moda urbana y chic',precio:150,antes:200,tag:'oferta'},
+  ],
+  zapatos:[
+    {id:'z1',emoji:'👟',nombre:'Tenis Casual Blanco',desc:'Cómodos y versátiles',precio:480,antes:600,tag:'oferta'},
+    {id:'z2',emoji:'👠',nombre:'Tacones Rojos',desc:'Elegancia para toda ocasión',precio:520,antes:null,tag:'nuevo'},
+    {id:'z3',emoji:'🥾',nombre:'Botas de Piel',desc:'Resistentes y con estilo',precio:680,antes:850,tag:'top'},
+    {id:'z4',emoji:'🩴',nombre:'Sandalia Cómoda',desc:'Perfecta para el verano',precio:200,antes:null,tag:'nuevo'},
+  ],
+  vestidos:[
+    {id:'v1',emoji:'👗',nombre:'Vestido Floral',desc:'Colores alegres, veraniego',precio:380,antes:480,tag:'top'},
+    {id:'v2',emoji:'🩱',nombre:'Vestido Midi Negro',desc:'Elegante y sofisticado',precio:420,antes:null,tag:'nuevo'},
+    {id:'v3',emoji:'👗',nombre:'Vestido Casual Rayas',desc:'Cómodo para el diario',precio:280,antes:360,tag:'oferta'},
+    {id:'v4',emoji:'👘',nombre:'Vestido Satinado',desc:'Para eventos especiales',precio:550,antes:null,tag:'nuevo'},
+  ],
+  accesorios:[
+    {id:'a1',emoji:'💍',nombre:'Aretes Dorados',desc:'Estilo minimalista y elegante',precio:80,antes:null,tag:'nuevo'},
+    {id:'a2',emoji:'👜',nombre:'Bolsa de Mano',desc:'Piel sintética, varios colores',precio:320,antes:400,tag:'oferta'},
+    {id:'a3',emoji:'🧣',nombre:'Bufanda Tejida',desc:'Suave, ideal para invierno',precio:120,antes:null,tag:'top'},
+    {id:'a4',emoji:'⌚',nombre:'Reloj Fashion',desc:'Moderno y resistente',precio:250,antes:320,tag:'oferta'},
+  ],
+};
+
+let carrito={};
+
+function crearCard(p){
+  const tc=p.tag==='nuevo'?'tag-nuevo':p.tag==='oferta'?'tag-oferta':'tag-top';
+  const tl=p.tag==='nuevo'?'Nuevo':p.tag==='oferta'?'Oferta':'Top';
+  return `<div class="prod-card" onclick="addToCart('${p.id}')">
+    <div class="prod-img"><span class="prod-tag ${tc}">${tl}</span>${p.emoji}</div>
+    <div class="prod-info">
+      <div class="prod-nombre">${p.nombre}</div>
+      <div class="prod-desc">${p.desc}</div>
+      <div class="prod-precio-row">
+        <div><span class="prod-precio">$${p.precio}</span>${p.antes?`<span class="prod-precio-antes">$${p.antes}</span>`:''}</div>
+        <button class="add-btn" id="btn-${p.id}" onclick="event.stopPropagation();addToCart('${p.id}')">+</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function cargarCatalogo(){
+  Object.keys(catalogo).forEach(cat=>{
+    const g=document.getElementById('grid-'+cat);
+    if(g) g.innerHTML=catalogo[cat].map(crearCard).join('');
+  });
+}
+
+function findProd(id){for(const c of Object.values(catalogo))for(const p of c)if(p.id===id)return p;}
+
+function addToCart(id){
+  const p=findProd(id);if(!p)return;
+  if(carrito[id])carrito[id].qty++;else carrito[id]={...p,qty:1};
+  renderCart();showToast('✅ '+p.nombre+' agregado');
+  const b=document.getElementById('btn-'+id);
+  if(b){b.textContent='✓';b.classList.add('added');setTimeout(()=>{b.textContent='+';b.classList.remove('added')},1000);}
+}
+
+function removeFromCart(id){delete carrito[id];renderCart();}
+function cambiarCantidad(id,d){if(!carrito[id])return;carrito[id].qty+=d;if(carrito[id].qty<=0)delete carrito[id];renderCart();}
+
+function renderCart(){
+  const ids=Object.keys(carrito);
+  const count=ids.reduce((s,id)=>s+carrito[id].qty,0);
+  const total=ids.reduce((s,id)=>s+carrito[id].precio*carrito[id].qty,0);
+  document.getElementById('cartCount').textContent=count;
+  document.getElementById('cartTotal').textContent='$'+total;
+  const el=document.getElementById('cartItems');
+  if(!ids.length){el.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛍️</div><p style="font-weight:600;margin-bottom:6px">¡Tu carrito está vacío!</p><p style="font-size:0.85rem;color:#aaa">Agrega productos para hacer tu pedido por WhatsApp</p></div>';return;}
+  el.innerHTML=ids.map(id=>{const i=carrito[id];return`<div class="cart-item"><div class="cart-item-emoji">${i.emoji}</div><div class="cart-item-info"><div class="cart-item-name">${i.nombre}</div><div class="cart-item-precio">$${i.precio} c/u</div><div class="cart-item-qty"><button class="qty-btn" onclick="cambiarCantidad('${id}',-1)">−</button><span class="qty-num">${i.qty}</span><button class="qty-btn" onclick="cambiarCantidad('${id}',1)">+</button></div></div><button class="del-btn" onclick="removeFromCart('${id}')">🗑</button></div>`;}).join('');
+}
+
+function abrirCarrito(){document.getElementById('cartPanel').classList.add('open');document.getElementById('cartBg').classList.add('open');}
+function cerrarCarrito(){document.getElementById('cartPanel').classList.remove('open');document.getElementById('cartBg').classList.remove('open');}
+
+function enviarWhatsApp(){
+  const ids=Object.keys(carrito);
+  if(!ids.length){showToast('⚠️ Tu carrito está vacío');return;}
+  const total=ids.reduce((s,id)=>s+carrito[id].precio*carrito[id].qty,0);
+  let msg='👗 *Hola ModaMix!* Me gustaría hacer un pedido:\n\n';
+  ids.forEach(id=>{const i=carrito[id];msg+=`• ${i.emoji} ${i.nombre} x${i.qty} = $${i.precio*i.qty}\n`;});
+  msg+=`\n💰 *Total: $${total}*\n\n📍 Los visitaré en Av. Roseville No. 10, Chignahuapan, Pue. 73300`;
+  window.open('https://wa.me/52'+WAPP+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+function abrirMapa(){window.open(MAPS_URL,'_blank');}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function irA(sel,btn){
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const el=document.querySelector(sel);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+cargarCatalogo();
+</script>
+</body>
+</html>
